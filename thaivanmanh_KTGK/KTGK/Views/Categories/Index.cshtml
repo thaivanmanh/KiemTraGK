@@ -1,0 +1,56 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+@model PagedList.IPagedList<KTGK.Models.Category>
+@using PagedList.Mvc;
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<p>
+    @using (Html.BeginForm(FormMethod.Get))
+    {
+        <input class="form-control" placeholder="search..." name="search" /> <hr />
+        <button class="btn btn-danger" type="submit" >Search</button>
+    }
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("Name", "Index", new
+            {
+               sortName = ViewBag.NameSortParm
+             })
+        </th>
+        <th>
+            @Html.ActionLink("Note", "Index", new
+       {
+           sortNote =ViewBag.NotSortParm
+       }) 
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.note)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.id })
+        </td>
+    </tr>
+}
+
+</table>
+
+@Html.PagedListPager(Model, page => Url.Action("", new { page, pageSize = Model.PageSize }))

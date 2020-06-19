@@ -1,0 +1,87 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+@model PagedList.IPagedList<KTGK.Models.viewProduct>
+@using PagedList.Mvc;
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<p>
+    @using (Html.BeginForm("Index","Products",FormMethod.Get, new { id = "submitForm", name = "submitForm" }))
+    {
+        <input class="form-control" placeholder="search..." name="search" /> <hr />
+        <button class="btn btn-danger" type="submit">Search</button><hr />
+        <select class="form-control" name="category_id" onchange="SelectedIndexChanged()">
+            <option value="0" selected>Tất cả</option>
+            @foreach (var item in Model[0].categories)
+                {
+                    string check = Request.QueryString["category_id"] == item.id.ToString() ? "selected" : "";
+                    <option value="@item.id" @check>@item.name</option>
+                }
+            
+           
+        </select>
+    }
+   
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("Name Category")
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].products.name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].products.name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].products.sort_name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model[0].products.note)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.products.Category.name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.products.code)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.products.name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.products.sort_name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.products.note)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.products.id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.products.id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.products.id })
+        </td>
+    </tr>
+}
+
+</table>
+
+@Html.PagedListPager(Model, page => Url.Action("", new { page, pageSize = Model.PageSize }))
+
+<script type="text/javascript">
+
+    function SelectedIndexChanged() {
+        //Form post
+        document.submitForm.submit();
+    }
+</script> 
